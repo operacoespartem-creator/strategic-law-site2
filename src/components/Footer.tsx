@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Linkedin, MessageCircle, Instagram, Phone } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import logo from "@/assets/logo-lins-neves.png";
@@ -78,6 +79,7 @@ const Footer = () => {
               <li><a href="#about" className="hover:text-accent transition-colors">Quem Somos</a></li>
               <li><a href="#practice-areas" className="hover:text-accent transition-colors">Áreas de Atuação</a></li>
               <li><a href="#team" className="hover:text-accent transition-colors">Equipe</a></li>
+              <li><Link to="/blog" className="hover:text-accent transition-colors">Blog</Link></li>
               <li><a href="#contact" className="hover:text-accent transition-colors">Contato</a></li>
             </ul>
           </div>
@@ -121,6 +123,9 @@ const Footer = () => {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
           <p>&copy; {new Date().getFullYear()} Lins Neves Advocacia. Todos os direitos reservados.</p>
+          <Link to="/blog/painel" className="mt-3 inline-block text-xs text-white/50 hover:text-accent transition-colors">
+            Acesso da equipe
+          </Link>
         </div>
       </div>
     </footer>

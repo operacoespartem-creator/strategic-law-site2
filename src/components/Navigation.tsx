@@ -9,7 +9,7 @@ const navItems = [
   { label: "Áreas de Atuação", href: "#practice-areas" },
   { label: "Quem Somos", href: "#about" },
   { label: "Equipe", href: "#team" },
-  { label: "Insights", href: "#insights" },
+  { label: "Blog", href: "/blog" },
   { label: "Contato", href: "#contact" }
 ];
 
@@ -56,7 +56,14 @@ const Navigation = () => {
 
   const scrollToSection = (href: string) => {
     setIsMenuOpen(false);
-    
+
+    // Itens que são páginas (ex.: /blog) abrem a página em vez de rolar até uma seção
+    if (href.startsWith("/")) {
+      navigate(href);
+      window.scrollTo(0, 0);
+      return;
+    }
+
     // If we're not on the home page, navigate there first
     if (location.pathname !== '/') {
       navigate('/');
