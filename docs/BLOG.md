@@ -30,7 +30,7 @@ Serve para mostrar o fluxo antes de ligar o banco.
 ## Ligar o Supabase
 
 1. Crie um projeto em [supabase.com](https://supabase.com) (região São Paulo).
-2. Em **SQL Editor**, cole e rode `supabase/migrations/20261028120000_blog.sql`.
+2. Em **SQL Editor**, rode `supabase/migrations/20261028120000_blog.sql` e depois `20261116190000_blog_permissoes.sql`.
    Isso cria as tabelas `posts` e `blog_members`, as regras de acesso, o espaço das capas e os 3 artigos atuais.
 3. Cadastre a equipe na tabela `blog_members` (há um exemplo comentado no fim da migração).
    O e-mail precisa estar em minúsculas.
@@ -43,6 +43,10 @@ Serve para mostrar o fluxo antes de ligar o banco.
 
 A chave `anon` pode ficar no site: ela é pública por definição. Quem protege os dados são as regras da migração.
 Visitantes só leem artigos publicados. Só e-mails cadastrados entram no painel. Autores não conseguem publicar.
+
+## Hospedagem na Vercel
+
+O `vercel.json` manda todos os endereços (como `/blog/nome-do-artigo`) para o site. Sem ele, abrir um artigo direto pelo link daria erro 404.
 
 ## Arquivos
 

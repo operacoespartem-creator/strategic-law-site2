@@ -22,6 +22,7 @@ export const BLOG_AREAS = [
   "Direito Societário",
   "Direito Trabalhista",
   "Direito Administrativo",
+  "Direito Administrativo Sancionador",
   "Direito Urbanístico",
   "Contratos",
   "Compliance",

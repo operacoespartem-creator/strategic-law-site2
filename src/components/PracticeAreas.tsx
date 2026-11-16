@@ -1,4 +1,4 @@
-import { Building, FileText, Shield, Briefcase, TrendingUp, Landmark, Globe, BookOpen, Scale, Receipt, Users, Gavel } from "lucide-react";
+import { Building, FileText, Shield, Briefcase, TrendingUp, Landmark, Globe, BookOpen, Scale, Receipt, Users, Gavel, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
@@ -14,7 +14,8 @@ const practiceAreas = [
   { icon: Landmark, name: "Estruturação de Concessões e PPPs", description: "Parcerias público-privadas e concessões" },
   { icon: BookOpen, name: "Assessoria em Licitações e Contratos", description: "Suporte jurídico em processos licitatórios" },
   { icon: Globe, name: "Negócios com Órgãos de Fomento", description: "Viabilização de projetos com financiamento público" },
-  { icon: Scale, name: "Consultoria Regulatória", description: "Orientação estratégica em regulamentações" }
+  { icon: Scale, name: "Consultoria Regulatória", description: "Orientação estratégica em regulamentações" },
+  { icon: ShieldCheck, name: "Direito Administrativo Sancionador", description: "Estratégia técnica e defesa especializada em processos de controle externo, responsabilização e fiscalização perante os Tribunais de Contas." }
 ];
 
 const PracticeAreas = () => {
@@ -44,7 +45,7 @@ const PracticeAreas = () => {
             return (
               <Card 
                 key={index} 
-                className={`group border-0 bg-transparent transition-all duration-700 hover:-translate-y-2 cursor-pointer ${
+                className={`${index === practiceAreas.length - 1 && practiceAreas.length % 3 === 1 ? "md:col-span-2 lg:col-span-1 lg:col-start-2" : ""} group border-0 bg-transparent transition-all duration-700 hover:-translate-y-2 cursor-pointer ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
                 style={{ transitionDelay: `${150 + index * 100}ms` }}
