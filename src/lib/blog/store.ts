@@ -22,8 +22,8 @@ export interface BlogStore {
   listMembers(): Promise<Member[]>;
 
   getSession(): Promise<Session | null>;
-  /** Supabase: envia o link de acesso por e-mail. Demonstração: entra direto. */
-  signIn(email: string): Promise<"link-enviado" | "conectado">;
+  /** Entra com o login único do painel (e-mail e senha). */
+  signIn(email: string, password: string): Promise<"conectado">;
   signOut(): Promise<void>;
   onAuthChange(callback: () => void): () => void;
   /** Só no modo demonstração: volta aos artigos iniciais. */

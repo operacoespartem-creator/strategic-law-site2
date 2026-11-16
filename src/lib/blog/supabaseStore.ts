@@ -169,14 +169,17 @@ export const createSupabaseStore = (): BlogStore => ({
     return { email, member: (member as Member | null) ?? null };
   },
 
-  async signIn(email) {
+  async signIn(email, password) {
     const db = await getClient();
-    const { error } = await db.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/blog/painel`, shouldCreateUser: true },
-    });
-    fail("Não foi possível enviar o link de acesso", error);
-    return "link-enviado";
+    const { error } = await db.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
+    if (error) {
+      throw new Error(
+        /invalid login credentials/i.test(error.message)
+          ? "E-mail ou senha incorretos."
+          : `Não foi possível entrar (${error.message})`,
+      );
+    }
+    return "conectado";
   },
 
   async signOut() {

@@ -44,9 +44,9 @@ const ArticleView = ({ post, preview = false }: ArticleViewProps) => (
         {post.excerpt && <p className="max-w-3xl text-lg md:text-xl text-white/85">{post.excerpt}</p>}
         <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-white/80">
           <span className="flex items-center gap-3">
-            <AuthorAvatar name={post.authorName} size="md" tone="dark" />
+            <AuthorAvatar name={post.authorName || "Lins Neves Advocacia"} size="md" tone="dark" />
             <span>
-              <span className="block font-semibold text-white">{post.authorName}</span>
+              <span className="block font-semibold text-white">{post.authorName || "Assinatura"}</span>
               {post.authorTitle && <span className="block">{post.authorTitle}</span>}
             </span>
           </span>
@@ -71,20 +71,24 @@ const ArticleView = ({ post, preview = false }: ArticleViewProps) => (
     <div className="container mx-auto max-w-3xl px-4 py-12 md:py-16">
       <ArticleBody html={post.contentHtml || "<p>O texto do artigo aparece aqui.</p>"} />
 
+
+      <div className="mt-12 border-t border-border pt-8">
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-accent">Assinatura</p>
+        <div className="flex items-center gap-4">
+          <AuthorAvatar name={post.authorName || "Lins Neves Advocacia"} size="lg" />
+          <div>
+            <p className="text-xl font-bold text-primary">{post.authorName || "Nome de quem assina"}</p>
+            {post.authorTitle && <p className="text-muted-foreground">{post.authorTitle}</p>}
+            {post.authorName !== "Lins Neves Advocacia" && <p className="text-sm text-muted-foreground">Lins Neves Advocacia</p>}
+          </div>
+        </div>
+      </div>
+
       {!preview && (
-        <div className="mt-12 border-t border-border pt-8">
+        <div className="mt-8">
           <ShareButtons title={post.title} url={postUrl(post)} />
         </div>
       )}
-
-      <div className="mt-10 flex items-start gap-4 rounded-lg bg-muted p-6">
-        <AuthorAvatar name={post.authorName} size="lg" />
-        <div>
-          <p className="text-sm text-muted-foreground">Escrito por</p>
-          <p className="text-lg font-bold text-primary">{post.authorName}</p>
-          {post.authorTitle && <p className="text-muted-foreground">{post.authorTitle}</p>}
-        </div>
-      </div>
     </div>
   </article>
 );

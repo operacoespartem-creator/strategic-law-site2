@@ -33,11 +33,16 @@ export const BLOG_AREAS = [
 ];
 
 /**
- * Pessoas que entram no painel no modo demonstração.
- * No modo Supabase, essa lista vem da tabela blog_members.
- * Sócios revisam e publicam; os demais enviam para revisão.
+ * Login único do painel. No Supabase, crie esse usuário com senha em
+ * Authentication > Users e cadastre o mesmo e-mail na tabela blog_members como "admin".
  */
-export const DEMO_MEMBERS: Member[] = [
+export const BLOG_LOGIN_EMAIL = "blog@linsneves.adv.br";
+
+/** Conta usada no modo demonstração. */
+export const DEMO_ACCOUNT: Member = { email: BLOG_LOGIN_EMAIL, name: "Equipe Lins Neves", title: "Painel do blog", role: "admin" };
+
+/** Sugestões para o campo Assinatura do editor: quem escreveu o artigo. */
+export const SIGNATURE_SUGGESTIONS: Member[] = [
   { email: "estevan@linsneves.adv.br", name: "Estevan De Barros Lins", title: "Sócio Fundador", role: "revisor" },
   { email: "arthurneves@linsneves.adv.br", name: "Arthur Rodrigues da Costa Neves", title: "Sócio", role: "revisor" },
   { email: "carolinaaraujo@linsneves.adv.br", name: "Ana Carolina Cavalcante Araújo", title: "Head da Área Trabalhista", role: "autor" },

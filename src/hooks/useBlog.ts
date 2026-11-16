@@ -63,7 +63,7 @@ export const useSession = () => {
 export const useSignIn = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (email: string) => blogStore.signIn(email),
+    mutationFn: ({ email, password }: { email: string; password: string }) => blogStore.signIn(email, password),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: keys.session }),
   });
 };

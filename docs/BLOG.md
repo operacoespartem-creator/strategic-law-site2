@@ -5,21 +5,19 @@ A seção "Insights" da página inicial mostra sozinha os 3 artigos mais recente
 
 ## Como a equipe publica
 
-1. Entra em `linsneves.com.br/blog/painel` com o e-mail do escritório e recebe um link de acesso, sem senha.
+1. Entra em `linsneves.com.br/blog/painel` com o login único do blog (e-mail e senha da conta do painel).
 2. Clica em **Novo artigo**, escreve ou cola o texto do Word ou do Google Docs.
-3. Preenche título, resumo, área e escolhe uma capa pronta ou envia uma imagem.
+3. Preenche título, resumo, área, a **Assinatura** (nome e cargo de quem escreveu, que aparece no fim do artigo) e escolhe uma capa pronta ou envia uma imagem.
 4. Confere a aba **Prévia** e a prévia do WhatsApp na lateral.
 5. Publica, ou agenda para uma data e hora.
 
-### Perfis
+### Login único
 
-| Perfil | Quem | O que pode fazer |
-| --- | --- | --- |
-| `autor` | Advogados | Escreve, salva rascunho e envia para revisão. Edita os próprios artigos até a publicação. |
-| `revisor` | Sócios | Tudo do autor, mais publicar, agendar, editar qualquer artigo e tirar do ar. |
-| `admin` | Quem cuida do site | Tudo do revisor, mais cadastrar e remover pessoas da equipe. |
+O painel usa uma conta só para a equipe toda (`blog@linsneves.adv.br`, ajustável em `src/lib/blog/config.ts`).
+Quem é o responsável por cada artigo fica registrado no campo **Assinatura**.
 
-Se o escritório decidir que todos publicam sem revisão, basta cadastrar todos como `revisor`.
+A estrutura de perfis (`autor`, `revisor`, `admin`) continua no banco, caso o escritório queira logins individuais no futuro.
+A conta única é cadastrada como `admin`, que publica direto.
 
 ## Modo demonstração
 
@@ -32,17 +30,16 @@ Serve para mostrar o fluxo antes de ligar o banco.
 1. Crie um projeto em [supabase.com](https://supabase.com) (região São Paulo).
 2. Em **SQL Editor**, rode `supabase/migrations/20261028120000_blog.sql` e depois `20261116190000_blog_permissoes.sql`.
    Isso cria as tabelas `posts` e `blog_members`, as regras de acesso, o espaço das capas e os 3 artigos atuais.
-3. Cadastre a equipe na tabela `blog_members` (há um exemplo comentado no fim da migração).
-   O e-mail precisa estar em minúsculas.
-4. Em **Authentication > URL Configuration**:
-   - Site URL: `https://linsneves.com.br`
-   - Redirect URLs: `https://linsneves.com.br/blog/painel`
-5. Copie a **Project URL** e a chave **anon public** (Project Settings > API) para as variáveis
+3. Crie o login do painel em **Authentication > Users > Add user** (e-mail e senha, com "Auto Confirm User").
+   Cadastre o mesmo e-mail na tabela `blog_members` com `role = 'admin'`:
+   `insert into public.blog_members (email, name, title, role) values ('blog@linsneves.adv.br', 'Equipe Lins Neves', 'Painel do blog', 'admin');`
+   Em **Authentication > Sign In / Providers**, desligue "Allow new users to sign up".
+4. Copie a **Project URL** e a chave **anon public** (Project Settings > API) para as variáveis
    `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` da hospedagem (Vercel: Settings > Environment Variables).
    Em desenvolvimento, copie `.env.example` para `.env.local`.
 
 A chave `anon` pode ficar no site: ela é pública por definição. Quem protege os dados são as regras da migração.
-Visitantes só leem artigos publicados. Só e-mails cadastrados entram no painel. Autores não conseguem publicar.
+Visitantes só leem artigos publicados. Só o login cadastrado entra no painel.
 
 ## Hospedagem na Vercel
 

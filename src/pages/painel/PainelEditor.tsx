@@ -13,8 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { useDeletePost, useMembers, usePost, useSavePost } from "@/hooks/useBlog";
-import { BLOG_AREAS, FIRM_AUTHOR } from "@/lib/blog/config";
+import { useDeletePost, usePost, useSavePost } from "@/hooks/useBlog";
+import { BLOG_AREAS, SIGNATURE_SUGGESTIONS } from "@/lib/blog/config";
 import { COVER_PRESETS } from "@/lib/blog/covers";
 import { blogStore } from "@/lib/blog/store";
 import { canPublish, isLive, isScheduled, type Member, type Post, type PostInput, type PostStatus } from "@/lib/blog/types";
@@ -24,7 +24,6 @@ import { STATUS_CLASS, STATUS_LABEL, statusDate, statusKey } from "./status";
 
 type Draft = Omit<PostInput, "id">;
 
-const FIRM_VALUE = "__escritorio__";
 const EXCERPT_LIMIT = 200;
 
 const emptyDraft = (member: Member): Draft => ({
@@ -35,9 +34,9 @@ const emptyDraft = (member: Member): Draft => ({
   area: "",
   coverPreset: 0,
   coverUrl: null,
-  authorEmail: member.email,
-  authorName: member.name,
-  authorTitle: member.title,
+  authorEmail: null,
+  authorName: "",
+  authorTitle: "",
   status: "rascunho",
   publishedAt: null,
 });
@@ -73,7 +72,6 @@ const PainelEditor = ({ member }: { member: Member }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: existing, isLoading } = usePost(id);
-  const { data: members = [] } = useMembers(canPublish(member));
   const save = useSavePost();
   const removePost = useDeletePost();
 
@@ -170,6 +168,7 @@ const PainelEditor = ({ member }: { member: Member }) => {
     if (!draft.title.trim()) next.title = "Dê um título ao artigo.";
     if (forPublishing) {
       if (!draft.area) next.area = "Escolha a área do artigo.";
+      if (!draft.authorName.trim()) next.signature = "Informe quem assina o artigo.";
       if (!draft.excerpt.trim()) next.excerpt = "Escreva um resumo de uma ou duas frases.";
       if (!htmlToText(draft.contentHtml).trim()) next.content = "O texto do artigo está vazio.";
       if (reviewer && !live && scheduleMode === "agendar" && (!scheduleAt || Date.parse(scheduleAt) <= Date.now())) {
@@ -266,14 +265,9 @@ const PainelEditor = ({ member }: { member: Member }) => {
     }
   };
 
-  const authorValue = draft.authorEmail ?? FIRM_VALUE;
-  const onAuthorChange = (value: string) => {
-    if (value === FIRM_VALUE) {
-      update({ authorEmail: null, authorName: FIRM_AUTHOR.name, authorTitle: FIRM_AUTHOR.title });
-      return;
-    }
-    const picked = members.find((item) => item.email === value);
-    if (picked) update({ authorEmail: picked.email, authorName: picked.name, authorTitle: picked.title });
+  const onSignatureName = (name: string) => {
+    const known = SIGNATURE_SUGGESTIONS.find((item) => item.name.toLowerCase() === name.trim().toLowerCase());
+    update({ authorName: name, authorTitle: known ? known.title : draft.authorTitle });
   };
 
   const busy = save.isPending || removePost.isPending;
@@ -514,28 +508,29 @@ const PainelEditor = ({ member }: { member: Member }) => {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="artigo-autor">Autor</Label>
-              {reviewer ? (
-                <Select value={authorValue} onValueChange={onAuthorChange}>
-                  <SelectTrigger id="artigo-autor">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={FIRM_VALUE}>{FIRM_AUTHOR.name} (escritório)</SelectItem>
-                    {[...members, ...(draft.authorEmail && !members.some((m) => m.email === draft.authorEmail)
-                      ? [{ email: draft.authorEmail, name: draft.authorName, title: draft.authorTitle ?? "", role: "autor" as const }]
-                      : [])].map((item) => (
-                      <SelectItem key={item.email} value={item.email}>
-                        {item.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : (
-                <p id="artigo-autor" className="rounded-md border border-border bg-muted px-3 py-2 text-sm">
-                  {draft.authorName}
-                </p>
-              )}
+              <Label htmlFor="artigo-assinatura">Assinatura</Label>
+              <Input
+                id="artigo-assinatura"
+                list="assinaturas-equipe"
+                value={draft.authorName}
+                onChange={(event) => onSignatureName(event.target.value)}
+                placeholder="Nome de quem escreveu"
+                aria-invalid={Boolean(errors.signature)}
+              />
+              <datalist id="assinaturas-equipe">
+                {SIGNATURE_SUGGESTIONS.map((item) => (
+                  <option key={item.email} value={item.name} />
+                ))}
+              </datalist>
+              <Input
+                id="artigo-assinatura-cargo"
+                aria-label="Cargo de quem assina"
+                value={draft.authorTitle ?? ""}
+                onChange={(event) => update({ authorTitle: event.target.value })}
+                placeholder="Cargo (ex.: Advogada, Head da Área Tributária)"
+              />
+              <p className="text-xs text-muted-foreground">Aparece no fim do artigo, como responsável pelo texto.</p>
+              <FieldError message={errors.signature} />
             </div>
 
             <div className="space-y-1.5">

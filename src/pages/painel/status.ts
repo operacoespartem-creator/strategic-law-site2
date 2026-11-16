@@ -31,6 +31,6 @@ export const statusDate = (post: Post) => {
 
 export const ROLE_LABEL: Record<MemberRole, string> = {
   revisor: "Revisa e publica",
-  admin: "Administrador",
+  admin: "Publica no blog",
   autor: "Envia para revisão",
 };

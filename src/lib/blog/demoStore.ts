@@ -1,4 +1,4 @@
-import { DEMO_MEMBERS } from "./config";
+import { DEMO_ACCOUNT } from "./config";
 import { seedPosts } from "./seed";
 import type { BlogStore } from "./store";
 import { isLive, type Post, type PostInput, type Session } from "./types";
@@ -101,18 +101,18 @@ export const createDemoStore = (): BlogStore => ({
   },
 
   async listMembers() {
-    return delay(DEMO_MEMBERS);
+    return delay([DEMO_ACCOUNT]);
   },
 
   async getSession(): Promise<Session | null> {
     const email = load().sessionEmail;
     if (!email) return null;
-    const member = DEMO_MEMBERS.find((item) => item.email.toLowerCase() === email.toLowerCase()) ?? null;
-    return { email, member };
+    return { email, member: email === DEMO_ACCOUNT.email ? DEMO_ACCOUNT : null };
   },
 
-  async signIn(email) {
-    persist({ ...load(), sessionEmail: email });
+  async signIn() {
+    // Na demonstração qualquer senha entra, sempre com a conta do painel.
+    persist({ ...load(), sessionEmail: DEMO_ACCOUNT.email });
     window.dispatchEvent(new Event(AUTH_EVENT));
     return "conectado";
   },
